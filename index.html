@@ -21,7 +21,7 @@
   --accent:#6366f1;
   --sprint-today-bg:#f0fdf4;
   --sprint-today-border:#86efac;
-  --col-dev:190px;
+  --col-dev:168px;
   --card-r:5px;
   --sh-card:0 1px 3px rgba(0,0,0,.07);
   --sh-hover:0 3px 12px rgba(0,0,0,.13);
@@ -30,19 +30,19 @@
 body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text-primary);min-height:100vh}
 
 /* ══ HEADER ══ */
-header{background:var(--surface);border-bottom:1px solid var(--border);padding:0 20px;height:52px;display:flex;align-items:center;position:sticky;top:0;z-index:300}
+header{background:var(--surface);border-bottom:1px solid var(--border);padding:0 10px;height:52px;display:flex;align-items:center;position:sticky;top:0;z-index:300}
 .hdr-center{flex:1;display:flex;align-items:center;justify-content:center;gap:9px}
 .logo-mark{width:30px;height:30px;background:var(--accent);border-radius:7px;display:flex;align-items:center;justify-content:center;color:#fff;font-family:'DM Mono',monospace;font-size:11px;font-weight:600;flex-shrink:0}
 header h1{font-size:17px;font-weight:600;letter-spacing:-.3px;white-space:nowrap}
 header h1 span{color:var(--text-muted);font-weight:400}
-.hdr-right{position:absolute;right:20px;display:flex;align-items:center;gap:7px}
+.hdr-right{position:absolute;right:10px;display:flex;align-items:center;gap:7px}
 .last-updated{font-size:11px;color:var(--text-muted);font-family:'DM Mono',monospace}
 .reload-btn{display:flex;align-items:center;gap:3px;padding:3px 10px;border-radius:5px;border:1px solid var(--border-strong);background:var(--surface);color:var(--text-secondary);font-size:11px;font-family:'DM Sans',sans-serif;cursor:pointer;transition:all .12s}
 .reload-btn:hover{background:var(--surface2);color:var(--text-primary)}
 .reload-btn:disabled{opacity:.5;cursor:default}
 
 /* ══ TOOLBAR ══ */
-.toolbar{background:var(--surface);border-bottom:1px solid var(--border);padding:6px 20px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.toolbar{background:var(--surface);border-bottom:1px solid var(--border);padding:6px 10px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 .toolbar-label{font-size:10.5px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.6px;white-space:nowrap}
 .sprint-filters{display:flex;gap:5px;flex-wrap:wrap}
 .sprint-btn{padding:2px 11px;border-radius:20px;border:1px solid var(--border-strong);background:var(--surface);color:var(--text-secondary);font-size:11px;font-family:'DM Sans',sans-serif;cursor:pointer;transition:all .12s;white-space:nowrap}
@@ -50,7 +50,7 @@ header h1 span{color:var(--text-muted);font-weight:400}
 .sprint-btn.active{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:600}
 
 /* ══ BOARD ══ */
-.board-wrap{padding:12px 20px 32px;display:flex;flex-direction:column;gap:12px}
+.board-wrap{padding:10px 8px 28px;display:flex;flex-direction:column;gap:10px}
 
 /* ── Sprint block ── */
 .sprint-block{border-radius:9px;border:1px solid var(--border);background:var(--surface);box-shadow:0 1px 4px rgba(0,0,0,.04);overflow:hidden}
@@ -102,15 +102,15 @@ header h1 span{color:var(--text-muted);font-weight:400}
 
 /* ── Dev / Proj column ── */
 .dev-col{width:var(--col-dev);min-width:var(--col-dev);flex-shrink:0;border-right:1px solid var(--border);display:flex;flex-direction:column}
-.proj-col{width:190px;min-width:190px}
+.proj-col{width:168px;min-width:168px}
 
 .dev-head{padding:6px 8px 5px;border-bottom:1px solid var(--border);background:var(--surface2);display:flex;flex-direction:column;gap:4px}
 .dev-top-row{display:flex;align-items:center;gap:6px}
 .dev-avatar{width:22px;height:22px;border-radius:50%;color:#fff;font-size:9.5px;font-weight:600;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.dev-name{font-size:11px;font-weight:600;color:var(--text-primary);line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:120px}
-.dev-count{font-size:9.5px;color:var(--text-muted);font-family:'DM Mono',monospace;white-space:nowrap}
+.dev-name{font-size:11px;font-weight:600;color:var(--text-primary);line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:108px}
+.dev-count{font-size:9.5px;color:var(--text-muted);font-family:'DM Mono',monospace;white-space:nowrap;font-weight:700}
 .dev-chips{display:flex;gap:2px;flex-wrap:wrap}
-.chip{font-size:8.5px;padding:1px 5px;border-radius:8px;font-weight:500;border:1px solid transparent;white-space:nowrap}
+.chip{font-size:9px;padding:2px 6px;border-radius:8px;font-weight:700;border:1px solid transparent;white-space:nowrap}
 .dev-prog-row{display:flex;align-items:center;gap:5px}
 .dev-prog-track{flex:1;height:3px;background:var(--border);border-radius:3px;overflow:hidden}
 .dev-prog-fill{height:100%;border-radius:3px;transition:width .4s}
@@ -817,18 +817,24 @@ function buildBoard(sprintData){
     colsWrap.appendChild(projCol);
 
     /* ── Colunas de Dev ── */
+    // Status que são ocultados no board principal (aparecem só no modal via KPI pill)
+    const HIDDEN_FROM_BOARD = new Set(['status-done','status-validation']);
+
     devs.forEach(dev=>{
-      const dt=devMap[dev];
-      const dTot=dt.length;
+      const dtAll=devMap[dev];                              // todas as tarefas do dev
+      const dt=dtAll.filter(t=>!HIDDEN_FROM_BOARD.has(resolveStatus(t.status).cls)); // visíveis no board
+      const dTot=dtAll.length;                             // total real para KPI/progresso
+      const dVisible=dt.length;
+
       const dBy={};
-      dt.forEach(t=>{const sr=resolveStatus(t.status);if(!dBy[sr.cls]) dBy[sr.cls]={...sr,count:0};dBy[sr.cls].count++});
-      const dPct=wPct(dt);
+      dtAll.forEach(t=>{const sr=resolveStatus(t.status);if(!dBy[sr.cls]) dBy[sr.cls]={...sr,count:0};dBy[sr.cls].count++});
+      const dPct=wPct(dtAll);
       const dH=health(dPct);
 
-      // Chips dinâmicos
+      // Chips com label completo e contagem em negrito
       let chips='';
-      Object.values(dBy).sort((a,b)=>b.w-a.w).forEach(({cls,lbl,cc,count})=>{
-        chips+=`<span class="chip ${cc}">${count} ${lbl.toLowerCase().slice(0,6)}.</span>`;
+      Object.values(dBy).sort((a,b)=>b.w-a.w).forEach(({lbl,cc,count})=>{
+        chips+=`<span class="chip ${cc}"><strong>${count}</strong> ${lbl}</span>`;
       });
 
       const devCol=document.createElement('div');
@@ -841,7 +847,7 @@ function buildBoard(sprintData){
           <div class="dev-avatar av-${devColorGlobal[dev]??0}">${ini(dev)}</div>
           <div style="min-width:0">
             <div class="dev-name">${dev}</div>
-            <div class="dev-count">${dTot} card${dTot!==1?'s':''}</div>
+            <div class="dev-count"><strong>${dTot}</strong> demanda${dTot!==1?'s':''}</div>
           </div>
         </div>
         <div class="dev-chips">${chips}</div>
@@ -852,15 +858,17 @@ function buildBoard(sprintData){
         </div>`;
 
       const dIcon=devHead.querySelector('.info-icon');
-      dIcon.addEventListener('mouseenter',e=>showTT(e,progTThtml(dt,dPct,dH,dev)));
+      dIcon.addEventListener('mouseenter',e=>showTT(e,progTThtml(dtAll,dPct,dH,dev)));
       dIcon.addEventListener('mousemove',moveTT);
       dIcon.addEventListener('mouseleave',hideTT);
       devCol.appendChild(devHead);
 
       const cardsWrap=document.createElement('div');
       cardsWrap.className='dev-cards';
-      if(!dt.length){
-        cardsWrap.innerHTML='<div class="empty-col">—</div>';
+
+      if(!dVisible){
+        // Dev só tem tarefas concluídas/validação — exibe aviso clean
+        cardsWrap.innerHTML=`<div class="empty-col" style="opacity:.6;font-size:10.5px">✓ ${dTot === dtAll.length ? 'todas' : dTot} concluída${dTot!==1?'s':''}</div>`;
       } else {
         dt.forEach(task=>{
           const sr=resolveStatus(task.status);
