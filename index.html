@@ -18,17 +18,9 @@
   --text-primary:#1a1d23;
   --text-secondary:#5c6370;
   --text-muted:#9099a8;
-
-  --status-running:#dbeafe;   --status-running-b:#93c5fd;
-  --status-waiting:#fef9c3;   --status-waiting-b:#fde047;
-  --status-rejected:#fee2e2;  --status-rejected-b:#fca5a5;
-  --status-other:#f1f3f5;     --status-other-b:#d1d5db;
-  --status-done:#dcfce7;      --status-done-b:#86efac;
-
   --accent:#6366f1;
   --sprint-today-bg:#f0fdf4;
   --sprint-today-border:#86efac;
-
   --col-dev:190px;
   --card-r:5px;
   --sh-card:0 1px 3px rgba(0,0,0,.07);
@@ -38,42 +30,22 @@
 body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text-primary);min-height:100vh}
 
 /* ══ HEADER ══ */
-header{
-  background:var(--surface);border-bottom:1px solid var(--border);
-  padding:0 20px;height:52px;display:flex;align-items:center;
-  position:sticky;top:0;z-index:300;
-}
+header{background:var(--surface);border-bottom:1px solid var(--border);padding:0 20px;height:52px;display:flex;align-items:center;position:sticky;top:0;z-index:300}
 .hdr-center{flex:1;display:flex;align-items:center;justify-content:center;gap:9px}
-.logo-mark{
-  width:30px;height:30px;background:var(--accent);border-radius:7px;
-  display:flex;align-items:center;justify-content:center;
-  color:#fff;font-family:'DM Mono',monospace;font-size:11px;font-weight:600;flex-shrink:0;
-}
+.logo-mark{width:30px;height:30px;background:var(--accent);border-radius:7px;display:flex;align-items:center;justify-content:center;color:#fff;font-family:'DM Mono',monospace;font-size:11px;font-weight:600;flex-shrink:0}
 header h1{font-size:17px;font-weight:600;letter-spacing:-.3px;white-space:nowrap}
 header h1 span{color:var(--text-muted);font-weight:400}
 .hdr-right{position:absolute;right:20px;display:flex;align-items:center;gap:7px}
 .last-updated{font-size:11px;color:var(--text-muted);font-family:'DM Mono',monospace}
-.reload-btn{
-  display:flex;align-items:center;gap:3px;padding:3px 10px;
-  border-radius:5px;border:1px solid var(--border-strong);
-  background:var(--surface);color:var(--text-secondary);
-  font-size:11px;font-family:'DM Sans',sans-serif;cursor:pointer;transition:all .12s;
-}
+.reload-btn{display:flex;align-items:center;gap:3px;padding:3px 10px;border-radius:5px;border:1px solid var(--border-strong);background:var(--surface);color:var(--text-secondary);font-size:11px;font-family:'DM Sans',sans-serif;cursor:pointer;transition:all .12s}
 .reload-btn:hover{background:var(--surface2);color:var(--text-primary)}
 .reload-btn:disabled{opacity:.5;cursor:default}
 
 /* ══ TOOLBAR ══ */
-.toolbar{
-  background:var(--surface);border-bottom:1px solid var(--border);
-  padding:6px 20px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;
-}
+.toolbar{background:var(--surface);border-bottom:1px solid var(--border);padding:6px 20px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 .toolbar-label{font-size:10.5px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.6px;white-space:nowrap}
 .sprint-filters{display:flex;gap:5px;flex-wrap:wrap}
-.sprint-btn{
-  padding:2px 11px;border-radius:20px;border:1px solid var(--border-strong);
-  background:var(--surface);color:var(--text-secondary);font-size:11px;
-  font-family:'DM Sans',sans-serif;cursor:pointer;transition:all .12s;white-space:nowrap;
-}
+.sprint-btn{padding:2px 11px;border-radius:20px;border:1px solid var(--border-strong);background:var(--surface);color:var(--text-secondary);font-size:11px;font-family:'DM Sans',sans-serif;cursor:pointer;transition:all .12s;white-space:nowrap}
 .sprint-btn:hover{background:var(--surface2)}
 .sprint-btn.active{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:600}
 
@@ -81,68 +53,43 @@ header h1 span{color:var(--text-muted);font-weight:400}
 .board-wrap{padding:12px 20px 32px;display:flex;flex-direction:column;gap:12px}
 
 /* ── Sprint block ── */
-.sprint-block{
-  border-radius:9px;border:1px solid var(--border);
-  background:var(--surface);box-shadow:0 1px 4px rgba(0,0,0,.04);
-  overflow:hidden;
-}
-.sprint-block.is-current{
-  border-color:var(--sprint-today-border);
-  box-shadow:0 0 0 2px rgba(134,239,172,.2),0 1px 4px rgba(0,0,0,.04);
-}
+.sprint-block{border-radius:9px;border:1px solid var(--border);background:var(--surface);box-shadow:0 1px 4px rgba(0,0,0,.04);overflow:hidden}
+.sprint-block.is-current{border-color:var(--sprint-today-border);box-shadow:0 0 0 2px rgba(134,239,172,.2),0 1px 4px rgba(0,0,0,.04)}
 .sprint-block.hidden{display:none}
 
-/* ══ SPRINT INFO BAR — horizontal, no topo ══ */
-.sprint-info-bar{
-  display:flex;align-items:center;gap:0;
-  border-bottom:1px solid var(--border);
-  background:var(--surface2);
-  flex-wrap:nowrap;overflow:hidden;
-}
+/* ══ SPRINT INFO BAR ══ */
+.sprint-info-bar{display:flex;align-items:stretch;border-bottom:1px solid var(--border);background:var(--surface2);flex-wrap:nowrap;overflow:hidden}
 .sprint-block.is-current .sprint-info-bar{background:var(--sprint-today-bg)}
 
-/* 1. Identidade */
-.si-identity{
-  display:flex;align-items:center;gap:8px;
-  padding:7px 14px 7px 12px;
-  border-right:1px solid var(--border);
-  flex-shrink:0;min-width:175px;
-}
+.si-identity{display:flex;align-items:center;gap:8px;padding:8px 14px 8px 12px;border-right:1px solid var(--border);flex-shrink:0;min-width:175px}
 .sprint-name{font-size:13px;font-weight:700;color:var(--text-primary);white-space:nowrap}
-.current-badge{
-  font-size:8.5px;background:#22c55e;color:#fff;
-  padding:1px 6px;border-radius:10px;font-weight:600;white-space:nowrap;
-}
+.current-badge{font-size:8.5px;background:#22c55e;color:#fff;padding:1px 6px;border-radius:10px;font-weight:600;white-space:nowrap}
 .sprint-dates{font-size:10px;color:var(--text-muted);font-family:'DM Mono',monospace;white-space:nowrap}
 
-/* 2. KPI pills */
-.si-kpis{display:flex;align-items:center;padding:0 6px;border-right:1px solid var(--border);flex-shrink:0}
+/* KPI pills — clicáveis */
+.si-kpis{display:flex;align-items:center;padding:0 4px;border-right:1px solid var(--border);flex-shrink:0}
 .kpi-pill{
   display:flex;align-items:center;gap:3px;
-  padding:0 7px;height:34px;border-right:1px solid var(--border);white-space:nowrap;
+  padding:0 7px;height:100%;min-height:36px;
+  border-right:1px solid var(--border);white-space:nowrap;
+  cursor:pointer;transition:background .12s;
+  user-select:none;
 }
 .kpi-pill:last-child{border-right:none}
+.kpi-pill:hover{background:rgba(99,102,241,.07)}
+.kpi-pill.active-filter{background:rgba(99,102,241,.12);outline:2px solid var(--accent);outline-offset:-2px;border-radius:4px}
 .kpi-dot{width:6px;height:6px;border-radius:2px;flex-shrink:0}
 .kpi-text{font-size:10.5px;color:var(--text-secondary)}
 .kpi-text strong{color:var(--text-primary);font-weight:600}
 
-/* 3. Progresso total */
-.si-progress{
-  display:flex;align-items:center;gap:6px;
-  padding:0 12px;
-  flex-shrink:0;
-}
-.prog-title{font-size:9.5px;color:var(--text-muted);white-space:nowrap}
-.prog-bar-h{width:80px;height:5px;background:var(--border);border-radius:4px;overflow:hidden;flex-shrink:0}
-.prog-bar-fill{height:100%;border-radius:4px;transition:width .4s}
-.prog-pct{font-size:11px;font-family:'DM Mono',monospace;font-weight:700;white-space:nowrap}
-.prog-health{font-size:10px;white-space:nowrap}
-.info-icon{
-  display:inline-flex;align-items:center;justify-content:center;
-  width:14px;height:14px;border-radius:50%;
-  background:var(--border);color:var(--text-muted);
-  font-size:8.5px;cursor:help;flex-shrink:0;font-weight:700;
-}
+/* Progresso total — destacado */
+.si-progress{display:flex;align-items:center;gap:8px;padding:0 14px;flex-shrink:0;border-right:1px solid var(--border)}
+.prog-title{font-size:10px;color:var(--text-muted);white-space:nowrap;font-weight:500}
+.prog-bar-h{width:100px;height:7px;background:var(--border);border-radius:5px;overflow:hidden;flex-shrink:0}
+.prog-bar-fill{height:100%;border-radius:5px;transition:width .4s}
+.prog-pct{font-size:14px;font-family:'DM Mono',monospace;font-weight:700;white-space:nowrap}
+.prog-health{font-size:11px;font-weight:700;white-space:nowrap}
+.info-icon{display:inline-flex;align-items:center;justify-content:center;width:14px;height:14px;border-radius:50%;background:var(--border);color:var(--text-muted);font-size:8.5px;cursor:help;flex-shrink:0;font-weight:700}
 .info-icon:hover{background:var(--accent);color:#fff}
 
 /* ══ SCROLL AREA ══ */
@@ -151,68 +98,36 @@ header h1 span{color:var(--text-muted);font-weight:400}
 .sprint-scroll::-webkit-scrollbar-track{background:var(--surface2)}
 .sprint-scroll::-webkit-scrollbar-thumb{background:var(--border-strong);border-radius:4px}
 .sprint-scroll::-webkit-scrollbar-thumb:hover{background:#aab2be}
-
 .sprint-cols{display:flex;min-width:max-content}
 
-/* ── Coluna genérica ── */
-.dev-col{
-  width:var(--col-dev);min-width:var(--col-dev);
-  flex-shrink:0;border-right:1px solid var(--border);
-  display:flex;flex-direction:column;
-}
-
-/* ── Coluna de Projetos (mesma largura) ── */
+/* ── Dev / Proj column ── */
+.dev-col{width:var(--col-dev);min-width:var(--col-dev);flex-shrink:0;border-right:1px solid var(--border);display:flex;flex-direction:column}
 .proj-col{width:190px;min-width:190px}
 
-/* ── Dev / Proj header ── */
-.dev-head{
-  padding:6px 8px 5px;
-  border-bottom:1px solid var(--border);
-  background:var(--surface2);
-  display:flex;flex-direction:column;gap:4px;
-}
+.dev-head{padding:6px 8px 5px;border-bottom:1px solid var(--border);background:var(--surface2);display:flex;flex-direction:column;gap:4px}
 .dev-top-row{display:flex;align-items:center;gap:6px}
-.dev-avatar{
-  width:22px;height:22px;border-radius:50%;color:#fff;
-  font-size:9.5px;font-weight:600;
-  display:flex;align-items:center;justify-content:center;flex-shrink:0;
-}
+.dev-avatar{width:22px;height:22px;border-radius:50%;color:#fff;font-size:9.5px;font-weight:600;display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .dev-name{font-size:11px;font-weight:600;color:var(--text-primary);line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:120px}
 .dev-count{font-size:9.5px;color:var(--text-muted);font-family:'DM Mono',monospace;white-space:nowrap}
 .dev-chips{display:flex;gap:2px;flex-wrap:wrap}
 .chip{font-size:8.5px;padding:1px 5px;border-radius:8px;font-weight:500;border:1px solid transparent;white-space:nowrap}
-.chip-running {background:var(--status-running); border-color:var(--status-running-b); color:#1d4ed8}
-.chip-waiting {background:var(--status-waiting); border-color:var(--status-waiting-b); color:#854d0e}
-.chip-rejected{background:var(--status-rejected);border-color:var(--status-rejected-b);color:#b91c1c}
-.chip-done    {background:var(--status-done);    border-color:var(--status-done-b);    color:#166534}
-.chip-other   {background:var(--status-other);   border-color:var(--status-other-b);   color:#374151}
 .dev-prog-row{display:flex;align-items:center;gap:5px}
 .dev-prog-track{flex:1;height:3px;background:var(--border);border-radius:3px;overflow:hidden}
 .dev-prog-fill{height:100%;border-radius:3px;transition:width .4s}
 .dev-prog-pct{font-size:9px;font-family:'DM Mono',monospace;font-weight:700;white-space:nowrap}
 
-/* ── Cards area ── */
+/* cards area */
 .dev-cards{padding:5px 5px 6px;display:flex;flex-direction:column;gap:3px;flex:1}
 
-/* ── Task card ── */
-.task-card{
-  border-radius:var(--card-r);padding:5px 8px;box-shadow:var(--sh-card);
-  cursor:pointer;transition:box-shadow .12s,transform .12s;
-  border:1px solid transparent;display:flex;flex-direction:column;gap:1px;
-}
+/* task card */
+.task-card{border-radius:var(--card-r);padding:5px 8px;box-shadow:var(--sh-card);cursor:pointer;transition:box-shadow .12s,transform .12s,opacity .15s;border:1px solid transparent;display:flex;flex-direction:column;gap:1px}
 .task-card:hover{box-shadow:var(--sh-hover);transform:translateY(-1px);z-index:2}
-.task-card.status-running {background:var(--status-running); border-color:var(--status-running-b)}
-.task-card.status-waiting {background:var(--status-waiting); border-color:var(--status-waiting-b)}
-.task-card.status-rejected{background:var(--status-rejected);border-color:var(--status-rejected-b)}
-.task-card.status-done    {background:var(--status-done);    border-color:var(--status-done-b)}
-.task-card.status-other   {background:var(--status-other);   border-color:var(--status-other-b)}
+.task-card.dimmed{opacity:.25;pointer-events:none}
 .card-project{font-size:8.5px;font-weight:600;font-family:'DM Mono',monospace;color:var(--text-muted);text-transform:uppercase;letter-spacing:.3px;line-height:1}
 .card-title{font-size:10.5px;font-weight:500;color:var(--text-primary);line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:calc(var(--col-dev) - 20px)}
 
-/* ── Proj card ── */
-.proj-card{
-  background:var(--surface2)!important;border-color:var(--border)!important;
-}
+/* proj card */
+.proj-card{background:var(--surface2)!important;border-color:var(--border)!important}
 .proj-card:hover{background:#eef2ff!important;border-color:#a5b4fc!important}
 .proj-card-name{font-size:10.5px;font-weight:600;color:var(--text-primary);line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:170px}
 .proj-card-meta{display:flex;align-items:center;justify-content:space-between;margin-top:2px}
@@ -221,13 +136,87 @@ header h1 span{color:var(--text-muted);font-weight:400}
 
 .empty-col{color:var(--text-muted);font-size:10px;text-align:center;padding:14px 6px;opacity:.4}
 
-/* ══ TOOLTIP ══ */
-.gtt{
-  position:fixed;background:#1c1f26;color:#e5e7eb;
-  padding:9px 12px;border-radius:8px;font-size:11px;line-height:1.5;max-width:310px;
-  pointer-events:none;z-index:9999;opacity:0;transition:opacity .1s;
-  box-shadow:0 8px 28px rgba(0,0,0,.32);
+/* ══ MODAL — centralizado, fundo cinza kanban ══ */
+.modal-overlay{
+  position:fixed;inset:0;
+  background:rgba(15,17,22,.55);
+  backdrop-filter:blur(2px);
+  z-index:500;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:24px 20px;
+  animation:fadeIn .16s ease;
 }
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+
+.modal-box{
+  background:#eef0f4;          /* mesmo fundo do kanban */
+  border-radius:12px;
+  width:100%;
+  max-width:1120px;
+  max-height:88vh;
+  display:flex;
+  flex-direction:column;
+  animation:popIn .18s ease;
+  box-shadow:0 24px 64px rgba(0,0,0,.28), 0 2px 8px rgba(0,0,0,.12);
+  border:1px solid var(--border);
+  overflow:hidden;
+}
+@keyframes popIn{from{transform:scale(.96);opacity:0}to{transform:scale(1);opacity:1}}
+
+.modal-header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:14px 18px 12px;
+  border-bottom:1px solid var(--border);
+  flex-shrink:0;
+  background:var(--surface);
+  border-radius:12px 12px 0 0;
+}
+.modal-title{font-size:15px;font-weight:700;color:var(--text-primary)}
+.modal-sub{font-size:11px;color:var(--text-muted);margin-top:2px}
+.modal-close{
+  width:28px;height:28px;border-radius:50%;border:none;
+  background:var(--surface2);color:var(--text-secondary);
+  font-size:15px;line-height:1;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  transition:background .12s,color .12s;flex-shrink:0;
+}
+.modal-close:hover{background:#e2e5eb;color:var(--text-primary)}
+
+/* área scrollável do modal */
+.modal-scroll{
+  overflow-x:auto;overflow-y:auto;flex:1;
+  padding:16px 18px 20px;
+}
+.modal-scroll::-webkit-scrollbar{height:4px;width:4px}
+.modal-scroll::-webkit-scrollbar-thumb{background:var(--border-strong);border-radius:4px}
+
+.modal-cols{display:flex;gap:10px;min-width:max-content;align-items:flex-start}
+
+/* coluna de dev dentro do modal — mesmo visual do board */
+.modal-dev-col{
+  width:200px;min-width:200px;
+  background:var(--surface);
+  border-radius:8px;
+  border:1px solid var(--border);
+  overflow:hidden;
+  box-shadow:0 1px 3px rgba(0,0,0,.05);
+}
+.modal-dev-head{
+  padding:8px 10px 7px;
+  border-bottom:1px solid var(--border);
+  background:var(--surface2);
+  display:flex;align-items:center;gap:7px;
+}
+.modal-dev-cards{
+  padding:6px;display:flex;flex-direction:column;gap:4px;
+  background:#eef0f4;   /* fundo kanban dentro das colunas */
+}
+.modal-empty{color:var(--text-muted);font-size:10px;text-align:center;padding:12px;opacity:.5}
+
+/* ══ TOOLTIP ══ */
+.gtt{position:fixed;background:#1c1f26;color:#e5e7eb;padding:9px 12px;border-radius:8px;font-size:11px;line-height:1.5;max-width:310px;pointer-events:none;z-index:9999;opacity:0;transition:opacity .1s;box-shadow:0 8px 28px rgba(0,0,0,.32)}
 .gtt.on{opacity:1}
 .tt-row{display:flex;gap:6px;margin-bottom:2px}
 .tt-lbl{color:#6b7280;min-width:72px;font-size:10.5px;flex-shrink:0}
@@ -239,23 +228,14 @@ header h1 span{color:var(--text-muted);font-weight:400}
 .state-overlay{display:flex;align-items:center;justify-content:center;min-height:200px;flex-direction:column;gap:10px;color:var(--text-muted);font-size:13px;padding:20px}
 .spinner{width:24px;height:24px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
-
-.error-box{
-  background:var(--surface);border:1px solid var(--border);border-radius:10px;
-  padding:20px 24px;max-width:520px;width:100%;
-}
+.error-box{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:20px 24px;max-width:520px;width:100%}
 .error-box h3{font-size:14px;font-weight:600;color:var(--text-primary);margin-bottom:10px}
 .error-box p{font-size:12.5px;color:var(--text-secondary);line-height:1.6;margin-bottom:8px}
 .error-box code{background:var(--surface2);border:1px solid var(--border);border-radius:4px;padding:2px 6px;font-size:11px;font-family:'DM Mono',monospace;word-break:break-all}
 .error-step{display:flex;gap:8px;margin-bottom:6px;font-size:12px;color:var(--text-secondary)}
 .error-step-n{width:18px;height:18px;border-radius:50%;background:var(--accent);color:#fff;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
-.retry-btn{
-  margin-top:14px;padding:7px 18px;border-radius:7px;border:none;
-  background:var(--accent);color:#fff;font-size:13px;font-weight:600;
-  font-family:'DM Sans',sans-serif;cursor:pointer;transition:opacity .15s;
-}
+.retry-btn{margin-top:14px;padding:7px 18px;border-radius:7px;border:none;background:var(--accent);color:#fff;font-size:13px;font-weight:600;font-family:'DM Sans',sans-serif;cursor:pointer;transition:opacity .15s}
 .retry-btn:hover{opacity:.85}
-.proxy-status{font-size:11px;color:var(--text-muted);margin-top:10px;font-family:'DM Mono',monospace}
 
 /* Avatar palette */
 .av-0{background:#6366f1}.av-1{background:#0ea5e9}.av-2{background:#10b981}
@@ -289,17 +269,13 @@ header h1 span{color:var(--text-muted);font-weight:400}
 <div class="gtt" id="gtt"></div>
 
 <script>
-/* ══════════════════════════════════════════
+/* ═══════════════════════════════════════════════
    CONFIG
-══════════════════════════════════════════ */
-// ID confirmado via pubhtml: PACX-1vRYN5AW9FVnV62E5Ur4w-S-XXm5O3uP8jS-myDMaruKi2jq_xbQxl85D3k0zZzOfl5PsNVpapJga68U
+═══════════════════════════════════════════════ */
 const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRYN5AW9FVnV62E5Ur4w-S-XXm5O3uP8jS-myDMaruKi2jq_xbQxl85D3k0zZzOfl5PsNVpapJga68U/pub?output=csv';
 
-// Estratégias de fetch em ordem — tenta cada uma até funcionar
-// 1ª: fetch direto (funciona em algumas redes/navegadores sem bloqueio CORS)
-// 2ª–5ª: proxies públicos de CORS como fallback
 const PROXIES = [
-  url => url,                                                                          // direto
+  url => url,
   url => `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`,
   url => `https://corsproxy.io/?${encodeURIComponent(url)}`,
   url => `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(url)}`,
@@ -312,23 +288,96 @@ const SPRINT_CONFIG = [
   { name:'Sprint 16', start:'13/04', end:'17/04' },
 ];
 
-/*
-  PROGRESSO PONDERADO — Agile Weighted Progress
-  Peso por status (% de conclusão que cada estado representa):
-    Ag. Início  → 0%   (trabalho não iniciado)
-    Em execução → 40%  (ativo, parcialmente entregue)
-    Rejeitada   → 0%   (sem valor, descartada)
-    Outros      → 20%  (estado indefinido)
-    Concluída   → 100% (entregue)
-  Fórmula: Σ(peso_i) / N × 100
-*/
-const W = {
-  'status-waiting' : 0.00,
-  'status-running' : 0.40,
-  'status-rejected': 0.00,
-  'status-other'   : 0.20,
-  'status-done'    : 1.00,
-};
+/* ─────────────────────────────────────────────
+   STATUS ENGINE — dinâmico + extensível
+
+   Classificação por palavras-chave (lowercase).
+   Ao encontrar um status novo na planilha que
+   não bata em nenhuma regra, ele cai em
+   "status-other" e recebe peso 0.20.
+
+   PESOS (Agile Weighted Progress):
+     Ag. Início      →  0%   (não iniciado)
+     Em execução     → 40%   (ativo)
+     Ag. Liberação   → 75%   (concluído, aguarda deploy/aprovação)
+     Em validação    → 100%  (equivale a concluído para efeito de progresso)
+     Concluída/Done  → 100%  (entregue)
+     Rejeitada       →  0%   (sem valor)
+     Outros          → 20%   (indefinido)
+
+   "Ag. Liberação" recebe 75% pois o trabalho
+   técnico está feito mas ainda depende de
+   liberação externa — referência: Definition of
+   Done parcial (SAFe / Scrum Guide).
+───────────────────────────────────────────── */
+const STATUS_RULES = [
+  // [regex-like keywords, cssClass, weight, displayLabel, bgColor, borderColor, chipClass]
+  { keys:['ag. início','ag.início','aguardando início','ag inicio'],  cls:'status-waiting',   w:0.00, lbl:'Ag. Início',     bg:'#fef9c3', bd:'#fde047', cc:'chip-waiting'  },
+  { keys:['em execução','execução','em execucao','execucao'],         cls:'status-running',   w:0.40, lbl:'Em execução',    bg:'#dbeafe', bd:'#93c5fd', cc:'chip-running'  },
+  { keys:['ag. liberação','ag. liberacao','aguardando liberação','liberação','liberacao'], cls:'status-release', w:0.75, lbl:'Ag. Liberação', bg:'#ede9fe', bd:'#c4b5fd', cc:'chip-release'},
+  { keys:['em validação','em validacao','validação','validacao'],     cls:'status-validation',w:1.00, lbl:'Em validação',   bg:'#d1fae5', bd:'#6ee7b7', cc:'chip-validation'},
+  { keys:['concluída','concluido','concluída','done','finaliz','entregue'], cls:'status-done', w:1.00, lbl:'Concluída', bg:'#dcfce7', bd:'#86efac', cc:'chip-done'},
+  { keys:['rejeitada','rejeitado','cancelad'],                        cls:'status-rejected',  w:0.00, lbl:'Rejeitada',     bg:'#fee2e2', bd:'#fca5a5', cc:'chip-rejected' },
+];
+const STATUS_OTHER = { cls:'status-other', w:0.20, lbl:'Outros', bg:'#f1f3f5', bd:'#d1d5db', cc:'chip-other' };
+
+// Injeta CSS dinâmico para cada status
+(function injectStatusCSS(){
+  const sheet=document.createElement('style');
+  STATUS_RULES.forEach(r=>{
+    sheet.textContent+=`
+      .task-card.${r.cls}{background:${r.bg};border-color:${r.bd}}
+      .${r.cc}{background:${r.bg};border-color:${r.bd};color:${adjustColor(r.bd)}}
+    `;
+  });
+  sheet.textContent+=`
+    .task-card.${STATUS_OTHER.cls}{background:${STATUS_OTHER.bg};border-color:${STATUS_OTHER.bd}}
+    .${STATUS_OTHER.cc}{background:${STATUS_OTHER.bg};border-color:${STATUS_OTHER.bd};color:#374151}
+    .chip-release{color:#5b21b6}
+    .chip-validation{color:#065f46}
+  `;
+  document.head.appendChild(sheet);
+})();
+
+function adjustColor(hex){
+  // Escurece a cor de borda para usar como texto do chip
+  return hex; // simplificado; chips têm override manual acima
+}
+
+// Descobre o status de uma tarefa
+function getStatus(rawStatus){
+  const s=(rawStatus||'').toLowerCase().trim();
+  if(!s) return STATUS_OTHER;
+  for(const r of STATUS_RULES){
+    if(r.keys.some(k=>s.includes(k))) return r;
+  }
+  return STATUS_OTHER;
+}
+
+// Cache de status desconhecidos encontrados na planilha (para exibição dinâmica)
+const unknownStatuses = new Map(); // rawLabel → {cls, w, lbl, bg, bd, cc}
+
+function resolveStatus(rawStatus){
+  const base = getStatus(rawStatus);
+  if(base !== STATUS_OTHER) return base;
+  // Status desconhecido — cria entrada dinâmica
+  const key = (rawStatus||'').trim();
+  if(key && !unknownStatuses.has(key)){
+    unknownStatuses.set(key,{...STATUS_OTHER, lbl:key});
+  }
+  return unknownStatuses.get(key)||STATUS_OTHER;
+}
+
+/* ─────────────────────────────────────────────
+   PROGRESSO PONDERADO
+   Fórmula: Σ(peso_i) / N × 100
+   Novos status desconhecidos recebem peso 0.20
+───────────────────────────────────────────── */
+function wPct(tasks){
+  if(!tasks.length) return 0;
+  const sum=tasks.reduce((a,t)=>a+resolveStatus(t.status).w,0);
+  return Math.round(sum/tasks.length*100);
+}
 
 /*
   SEMÁFORO (Sprint Goal Success Rate — benchmarks ágeis):
@@ -342,9 +391,9 @@ function health(pct){
   return            {c:'#7f1d1d',l:'Crítico'};
 }
 
-/* ══════════════════════════════════════════
+/* ═══════════════════════════════════════════════
    HELPERS
-══════════════════════════════════════════ */
+═══════════════════════════════════════════════ */
 function parseCSV(text){
   const rows=[];
   for(const line of text.split(/\r?\n/)){
@@ -364,20 +413,6 @@ function parseCSV(text){
 
 function clean(v){return(v||'').replace(/^"|"$/g,'').trim()}
 
-function sc(status){
-  const s=(status||'').toLowerCase();
-  if(s.includes('execu'))                                             return 'status-running';
-  if(s.includes('ag')||s.includes('início')||s.includes('aguard'))   return 'status-waiting';
-  if(s.includes('rejeit'))                                            return 'status-rejected';
-  if(s.includes('conclu')||s.includes('done')||s.includes('finaliz'))return 'status-done';
-  return 'status-other';
-}
-
-function wPct(tasks){
-  if(!tasks.length) return 0;
-  return Math.round(tasks.reduce((a,t)=>a+(W[sc(t.status)]??0.2),0)/tasks.length*100);
-}
-
 function ini(name){
   if(!name) return '?';
   const p=name.trim().split(/\s+/);
@@ -391,50 +426,39 @@ function isCurrent(s){
   return today>=parse(s.start)&&today<=end;
 }
 
-/* ══════════════════════════════════════════
-   FETCH COM FALLBACK ENTRE PROXIES
-══════════════════════════════════════════ */
+/* ═══════════════════════════════════════════════
+   FETCH COM FALLBACK
+═══════════════════════════════════════════════ */
 async function fetchCSV(){
   const bust=`&_t=${Date.now()}`;
   const errors=[];
-
   for(let i=0;i<PROXIES.length;i++){
-    const label=i===0?'direto':(`proxy ${i}`);
-    const targetUrl=i===0?CSV_URL+bust:CSV_URL; // direto usa bust, proxies usam URL limpa
-    const fetchUrl=PROXIES[i](targetUrl+(i===0?'':bust));
-
-    // Atualizar status visual
-    const board=document.getElementById('board');
-    const statusEl=board.querySelector('.load-status');
+    const label=i===0?'direto':`proxy ${i}`;
+    const fetchUrl=PROXIES[i](CSV_URL+bust);
+    const statusEl=document.querySelector('.load-status');
     if(statusEl) statusEl.textContent=`Tentando ${label}… (${i+1}/${PROXIES.length})`;
-
     try{
-      const res=await fetch(fetchUrl,{
-        cache:'no-store',
-        signal:AbortSignal.timeout(10000),
-      });
+      const res=await fetch(fetchUrl,{cache:'no-store',signal:AbortSignal.timeout(10000)});
       if(!res.ok) throw new Error(`HTTP ${res.status}`);
       const text=await res.text();
       if(!text||text.trim().length<20) throw new Error('Resposta vazia');
-      // Rejeita se veio HTML de erro do Google (não CSV)
       if(text.trim().startsWith('<!DOCTYPE')||text.trim().startsWith('<html'))
-        throw new Error('Recebeu HTML em vez de CSV (planilha não publicada ou URL incorreta)');
-      console.log(`✅ Conectado via ${label}`);
+        throw new Error('Recebeu HTML em vez de CSV');
+      console.log(`✅ ${label}`);
       return{text,label};
     }catch(e){
-      console.warn(`❌ Falhou ${label}:`,e.message);
+      console.warn(`❌ ${label}:`,e.message);
       errors.push(`${label}: ${e.message}`);
     }
   }
-  throw new Error('Não foi possível conectar à planilha após tentar todas as estratégias:\n\n'+errors.join('\n'));
+  throw new Error('Não foi possível conectar:\n'+errors.join('\n'));
 }
 
-/* ══════════════════════════════════════════
+/* ═══════════════════════════════════════════════
    TOOLTIP
-══════════════════════════════════════════ */
+═══════════════════════════════════════════════ */
 const gtt=document.getElementById('gtt');
 let ttTimer=null;
-
 function showTT(e,html){clearTimeout(ttTimer);gtt.innerHTML=html;gtt.classList.add('on');moveTT(e)}
 function moveTT(e){
   let x=e.clientX+14,y=e.clientY-10;
@@ -445,26 +469,35 @@ function moveTT(e){
 }
 function hideTT(){ttTimer=setTimeout(()=>gtt.classList.remove('on'),80)}
 
-function cardTThtml(t){return`
-  <div class="tt-row"><span class="tt-lbl">Projeto</span><span class="tt-val">${t.projeto||'—'}</span></div>
-  <div class="tt-row"><span class="tt-lbl">Título</span><span class="tt-val">${t.titulo||'—'}</span></div>
-  <div class="tt-row"><span class="tt-lbl">Status</span><span class="tt-val">${t.status||'—'}</span></div>
-  <div class="tt-row"><span class="tt-lbl">Responsável</span><span class="tt-val">${t.quem||'—'}</span></div>
-  <div class="tt-row"><span class="tt-lbl">Sprint</span><span class="tt-val">${t.sprint||'—'}</span></div>
-  ${t.entrega?`<div class="tt-row"><span class="tt-lbl">Entrega</span><span class="tt-val">${t.entrega}</span></div>`:''}
-  ${t.obs?`<div class="tt-row"><span class="tt-lbl">OBS</span><span class="tt-val">${t.obs}</span></div>`:''}
-`}
+function cardTThtml(t){
+  const sr=resolveStatus(t.status);
+  return`
+    <div class="tt-row"><span class="tt-lbl">Projeto</span><span class="tt-val">${t.projeto||'—'}</span></div>
+    <div class="tt-row"><span class="tt-lbl">Título</span><span class="tt-val">${t.titulo||'—'}</span></div>
+    <div class="tt-row"><span class="tt-lbl">Status</span><span class="tt-val">${t.status||'—'} <span style="color:#9ca3af;font-size:9.5px">(peso ${(sr.w*100).toFixed(0)}%)</span></span></div>
+    <div class="tt-row"><span class="tt-lbl">Responsável</span><span class="tt-val">${t.quem||'—'}</span></div>
+    <div class="tt-row"><span class="tt-lbl">Sprint</span><span class="tt-val">${t.sprint||'—'}</span></div>
+    ${t.entrega?`<div class="tt-row"><span class="tt-lbl">Entrega</span><span class="tt-val">${t.entrega}</span></div>`:''}
+    ${t.obs?`<div class="tt-row"><span class="tt-lbl">OBS</span><span class="tt-val">${t.obs}</span></div>`:''}`;
+}
 
 function progTThtml(tasks,pct,h,scope){
-  const counts={};
-  tasks.forEach(t=>{const s=sc(t.status);counts[s]=(counts[s]||0)+1});
-  const rows=[
-    ['Ag. Início','status-waiting'],['Em execução','status-running'],
-    ['Concluída','status-done'],['Rejeitada','status-rejected'],['Outros','status-other'],
-  ].map(([lbl,key])=>{
-    const n=counts[key]||0;if(!n)return'';
-    return`<div class="tt-row"><span class="tt-lbl">${lbl}</span><span class="tt-val">${n} × ${(W[key]*100).toFixed(0)}% = ${(n*W[key]).toFixed(2)}</span></div>`;
-  }).join('');
+  // Agrupa por status raw para mostrar todos os status presentes
+  const rawGroups={};
+  tasks.forEach(t=>{
+    const k=t.status||'(sem status)';
+    if(!rawGroups[k]) rawGroups[k]={count:0,w:resolveStatus(t.status).w,lbl:resolveStatus(t.status).lbl};
+    rawGroups[k].count++;
+  });
+  const rows=Object.entries(rawGroups).sort((a,b)=>b[1].w-a[1].w).map(([raw,{count,w,lbl}])=>
+    `<div class="tt-row"><span class="tt-lbl">${raw}</span><span class="tt-val">${count} × ${(w*100).toFixed(0)}% = ${(count*w).toFixed(2)}</span></div>`
+  ).join('');
+
+  const allRules=[...STATUS_RULES,{lbl:'Outros/novos',w:0.20}];
+  const weightRows=allRules.map(r=>
+    `<div class="tt-row"><span class="tt-lbl">${r.lbl}</span><span class="tt-val">${(r.w*100).toFixed(0)}%</span></div>`
+  ).join('');
+
   return`
     <div class="tt-hd">Progresso ponderado — ${scope}</div>
     <div class="tt-row"><span class="tt-lbl">Total</span><span class="tt-val">${tasks.length} tarefas</span></div>
@@ -473,14 +506,10 @@ function progTThtml(tasks,pct,h,scope){
     <div class="tt-row"><span class="tt-lbl">Fórmula</span><span class="tt-val">Σ(peso×qtd) ÷ total × 100</span></div>
     <div class="tt-row"><span class="tt-lbl">Resultado</span><span class="tt-val" style="color:${h.c};font-weight:700">${pct}% — ${h.l}</span></div>
     <div class="tt-sep"></div>
-    <div class="tt-hd">Pesos dos status</div>
-    <div class="tt-row"><span class="tt-lbl">Ag. Início</span><span class="tt-val">0%</span></div>
-    <div class="tt-row"><span class="tt-lbl">Em execução</span><span class="tt-val">40%</span></div>
-    <div class="tt-row"><span class="tt-lbl">Concluída</span><span class="tt-val">100%</span></div>
-    <div class="tt-row"><span class="tt-lbl">Rejeitada</span><span class="tt-val">0%</span></div>
-    <div class="tt-row"><span class="tt-lbl">Outros</span><span class="tt-val">20%</span></div>
+    <div class="tt-hd">Tabela de pesos</div>
+    ${weightRows}
     <div class="tt-sep"></div>
-    <div class="tt-hd">Semáforo de saúde</div>
+    <div class="tt-hd">Semáforo</div>
     <div class="tt-row"><span class="tt-lbl" style="color:#16a34a">≥ 80%</span><span class="tt-val">Excelente</span></div>
     <div class="tt-row"><span class="tt-lbl" style="color:#65a30d">≥ 60%</span><span class="tt-val">Bom</span></div>
     <div class="tt-row"><span class="tt-lbl" style="color:#d97706">≥ 40%</span><span class="tt-val">Razoável</span></div>
@@ -488,9 +517,104 @@ function progTThtml(tasks,pct,h,scope){
     <div class="tt-row"><span class="tt-lbl" style="color:#7f1d1d">< 20%</span><span class="tt-val">Crítico</span></div>`;
 }
 
-/* ══════════════════════════════════════════
-   FILTRO
-══════════════════════════════════════════ */
+/* ═══════════════════════════════════════════════
+   MODAL — exibe tarefas filtradas por projeto ou status
+═══════════════════════════════════════════════ */
+let devColorGlobal={};
+
+function openModal(title, subtitle, tasks){
+  // Remove modal anterior se existir
+  document.querySelector('.modal-overlay')?.remove();
+
+  // Agrupar por dev
+  const devMap={};
+  tasks.forEach(t=>{
+    const dev=t.quem||'Não atribuído';
+    if(!devMap[dev]) devMap[dev]=[];
+    devMap[dev].push(t);
+  });
+  const devs=Object.keys(devMap).sort();
+
+  const overlay=document.createElement('div');
+  overlay.className='modal-overlay';
+  overlay.addEventListener('click',e=>{if(e.target===overlay) overlay.remove()});
+
+  const box=document.createElement('div');
+  box.className='modal-box';
+
+  // Header
+  const hdr=document.createElement('div');
+  hdr.className='modal-header';
+  hdr.innerHTML=`
+    <div>
+      <div class="modal-title">${title}</div>
+      <div class="modal-sub">${subtitle} · ${tasks.length} demanda${tasks.length!==1?'s':''} · por colaborador</div>
+    </div>
+    <button class="modal-close" title="Fechar">✕</button>`;
+  hdr.querySelector('.modal-close').addEventListener('click',()=>overlay.remove());
+  box.appendChild(hdr);
+
+  // Scroll area com colunas por dev
+  const scroll=document.createElement('div');
+  scroll.className='modal-scroll';
+  const cols=document.createElement('div');
+  cols.className='modal-cols';
+
+  if(!devs.length){
+    cols.innerHTML='<div style="color:var(--text-muted);font-size:13px;padding:20px">Nenhuma demanda encontrada.</div>';
+  } else {
+    devs.forEach(dev=>{
+      const dt=devMap[dev];
+      const ci=devColorGlobal[dev]??0;
+
+      const col=document.createElement('div');
+      col.className='modal-dev-col';
+
+      const head=document.createElement('div');
+      head.className='modal-dev-head';
+      head.innerHTML=`
+        <div class="dev-avatar av-${ci}" style="width:20px;height:20px;font-size:9px">${ini(dev)}</div>
+        <div>
+          <div class="dev-name">${dev}</div>
+          <div class="dev-count">${dt.length} card${dt.length!==1?'s':''}</div>
+        </div>`;
+      col.appendChild(head);
+
+      const cards=document.createElement('div');
+      cards.className='modal-dev-cards';
+
+      if(!dt.length){
+        cards.innerHTML='<div class="modal-empty">—</div>';
+      } else {
+        dt.forEach(task=>{
+          const sr=resolveStatus(task.status);
+          const card=document.createElement('div');
+          card.className=`task-card ${sr.cls}`;
+          card.style.maxWidth='188px';
+          card.innerHTML=`
+            <div class="card-project">${task.projeto||'—'}</div>
+            <div class="card-title" style="max-width:172px">${task.titulo||'(sem título)'}</div>`;
+          if(task.link) card.addEventListener('click',()=>window.open(task.link,'_blank'));
+          card.addEventListener('mouseenter',e=>showTT(e,cardTThtml(task)));
+          card.addEventListener('mousemove',moveTT);
+          card.addEventListener('mouseleave',hideTT);
+          cards.appendChild(card);
+        });
+      }
+      col.appendChild(cards);
+      cols.appendChild(col);
+    });
+  }
+
+  scroll.appendChild(cols);
+  box.appendChild(scroll);
+  overlay.appendChild(box);
+  document.body.appendChild(overlay);
+}
+
+/* ═══════════════════════════════════════════════
+   FILTRO DE SPRINT
+═══════════════════════════════════════════════ */
 let activeFilters=new Set(['ALL']);
 
 function buildFilters(names){
@@ -517,17 +641,16 @@ function toggleFilter(sprint){
   document.querySelectorAll('.sprint-block').forEach(b=>b.classList.toggle('hidden',!activeFilters.has('ALL')&&!activeFilters.has(b.dataset.sprint)));
 }
 
-/* ══════════════════════════════════════════
+/* ═══════════════════════════════════════════════
    RENDER
-══════════════════════════════════════════ */
+═══════════════════════════════════════════════ */
 function buildBoard(sprintData){
   const board=document.getElementById('board');
   board.innerHTML='';
 
   const allDevs=new Set();
   sprintData.forEach(({tasks})=>tasks.forEach(t=>{if(t.quem)allDevs.add(t.quem)}));
-  const devColor={};
-  [...allDevs].forEach((d,i)=>{devColor[d]=i%10});
+  [...allDevs].forEach((d,i)=>{devColorGlobal[d]=i%10});
 
   buildFilters(sprintData.filter(s=>s.tasks.length).map(s=>s.sprint.name));
 
@@ -543,22 +666,26 @@ function buildBoard(sprintData){
     });
     const devs=Object.keys(devMap).sort();
 
-    // Métricas sprint
+    // Métricas: agrupar por status raw e por cls
+    const byRaw={};   // raw string → count
+    const byCls={};   // css class → {count, lbl, bg, bd, w}
+    tasks.forEach(t=>{
+      const raw=t.status||'(sem status)';
+      byRaw[raw]=(byRaw[raw]||0)+1;
+      const sr=resolveStatus(t.status);
+      if(!byCls[sr.cls]) byCls[sr.cls]={count:0,lbl:sr.lbl,bg:sr.bg,bd:sr.bd,w:sr.w,tasks:[]};
+      byCls[sr.cls].count++;
+      byCls[sr.cls].tasks.push(t);
+    });
+
     const total=tasks.length;
-    const cBy={};
-    tasks.forEach(t=>{const s=sc(t.status);cBy[s]=(cBy[s]||0)+1});
-    const running =cBy['status-running'] ||0;
-    const waiting =cBy['status-waiting'] ||0;
-    const rejected=cBy['status-rejected']||0;
-    const done    =cBy['status-done']    ||0;
-    const other   =cBy['status-other']   ||0;
     const sPct=wPct(tasks);
     const sH=health(sPct);
 
     // Projetos
     const projMap={};
-    tasks.forEach(t=>{const p=t.projeto||'(s/ projeto)';projMap[p]=(projMap[p]||0)+1});
-    const projList=Object.entries(projMap).sort((a,b)=>b[1]-a[1]);
+    tasks.forEach(t=>{const p=t.projeto||'(s/ projeto)';if(!projMap[p]) projMap[p]=[];projMap[p].push(t)});
+    const projList=Object.entries(projMap).sort((a,b)=>b[1].length-a[1].length);
 
     /* ── Sprint block ── */
     const block=document.createElement('div');
@@ -579,25 +706,33 @@ function buildBoard(sprintData){
       </div>`;
     infoBar.appendChild(idDiv);
 
-    // 2. KPI pills
+    // 2. KPI pills — dinâmicos e clicáveis
     const kpisDiv=document.createElement('div');
     kpisDiv.className='si-kpis';
-    [
-      [running,  'var(--status-running-b)',  'Exec.'],
-      [waiting,  'var(--status-waiting-b)',  'Ag.'],
-      [done,     'var(--status-done-b)',     'Ok'],
-      [rejected, 'var(--status-rejected-b)', 'Rej.'],
-      [other,    'var(--status-other-b)',    'Outro'],
-    ].forEach(([n,color,lbl])=>{
-      if(!n) return;
+
+    Object.entries(byCls).sort((a,b)=>b[1].w-a[1].w).forEach(([cls,{count,lbl,bg,bd,tasks:stTasks}])=>{
       const pill=document.createElement('div');
       pill.className='kpi-pill';
-      pill.innerHTML=`<div class="kpi-dot" style="background:${color}"></div><span class="kpi-text"><strong>${n}</strong> ${lbl} <span style="color:var(--text-muted)">(${Math.round(n/total*100)}%)</span></span>`;
+      pill.title=`Clique para ver demandas: ${lbl}`;
+      pill.innerHTML=`
+        <div class="kpi-dot" style="background:${bd}"></div>
+        <span class="kpi-text">
+          <strong>${count}</strong> ${lbl}
+          <span style="color:var(--text-muted)">(${Math.round(count/total*100)}%)</span>
+        </span>`;
+      // Clique no pill → modal com demandas desse status
+      pill.addEventListener('click',()=>{
+        openModal(
+          `${lbl}`,
+          `Sprint: ${sprint.name}`,
+          stTasks
+        );
+      });
       kpisDiv.appendChild(pill);
     });
     infoBar.appendChild(kpisDiv);
 
-    // 3. Progresso total
+    // 3. Progresso total — maior e em negrito
     const progDiv=document.createElement('div');
     progDiv.className='si-progress';
     progDiv.innerHTML=`
@@ -620,7 +755,7 @@ function buildBoard(sprintData){
     const colsWrap=document.createElement('div');
     colsWrap.className='sprint-cols';
 
-    /* ── Coluna de Projetos (primeira) ── */
+    /* ── Coluna de Projetos ── */
     const projCol=document.createElement('div');
     projCol.className='dev-col proj-col';
 
@@ -641,42 +776,37 @@ function buildBoard(sprintData){
     const projCardsWrap=document.createElement('div');
     projCardsWrap.className='dev-cards';
 
-    projList.forEach(([projName,count])=>{
-      const projTasks=tasks.filter(t=>t.projeto===projName);
-      const projLinks=projTasks.map(t=>t.link).filter(Boolean);
-
+    projList.forEach(([projName,projTasks])=>{
       const pCard=document.createElement('div');
       pCard.className='task-card proj-card status-other';
-      pCard.style.cursor=projLinks.length?'pointer':'default';
+      pCard.style.cursor='pointer';
       pCard.innerHTML=`
         <div class="proj-card-name">${projName}</div>
         <div class="proj-card-meta">
-          <span class="proj-card-count">${count} demanda${count!==1?'s':''}</span>
-          ${projLinks.length?'<span class="proj-card-hint">↗</span>':''}
+          <span class="proj-card-count">${projTasks.length} demanda${projTasks.length!==1?'s':''}</span>
+          <span class="proj-card-hint">↗ ver demandas</span>
         </div>`;
 
-      if(projLinks.length===1){
-        pCard.addEventListener('click',()=>window.open(projLinks[0],'_blank'));
-      }else if(projLinks.length>1){
-        pCard.addEventListener('click',()=>{
-          projLinks.forEach((u,i)=>setTimeout(()=>window.open(u,'_blank'),i*130));
-        });
-      }
+      // Clique → modal com demandas do projeto, por colaborador
+      pCard.addEventListener('click',()=>{
+        openModal(
+          projName,
+          `Sprint: ${sprint.name}`,
+          projTasks
+        );
+      });
 
       pCard.addEventListener('mouseenter',e=>{
-        const st=projTasks.reduce((a,t)=>{const s=sc(t.status);a[s]=(a[s]||0)+1;return a},{});
-        const lines=[
-          ['status-running','Em execução'],['status-waiting','Ag. Início'],
-          ['status-done','Concluída'],['status-rejected','Rejeitada'],['status-other','Outros'],
-        ].filter(([k])=>st[k]).map(([k,l])=>
-          `<div class="tt-row"><span class="tt-lbl">${l}</span><span class="tt-val">${st[k]}</span></div>`
-        ).join('');
+        const st={};
+        projTasks.forEach(t=>{const sr=resolveStatus(t.status);st[sr.lbl]=(st[sr.lbl]||0)+1});
+        const lines=Object.entries(st).map(([l,n])=>
+          `<div class="tt-row"><span class="tt-lbl">${l}</span><span class="tt-val">${n}</span></div>`).join('');
         showTT(e,`
           <div class="tt-hd">Projeto</div>
           <div class="tt-row"><span class="tt-lbl">Nome</span><span class="tt-val">${projName}</span></div>
-          <div class="tt-row"><span class="tt-lbl">Demandas</span><span class="tt-val">${count}</span></div>
+          <div class="tt-row"><span class="tt-lbl">Demandas</span><span class="tt-val">${projTasks.length}</span></div>
           <div class="tt-sep"></div><div class="tt-hd">Por status</div>${lines}
-          ${projLinks.length?`<div class="tt-sep"></div><div style="font-size:10px;color:#9ca3af">Clique → abrir ${projLinks.length} demanda${projLinks.length!==1?'s':''}</div>`:''}`);
+          <div class="tt-sep"></div><div style="font-size:10px;color:#9ca3af">Clique → ver por colaborador</div>`);
       });
       pCard.addEventListener('mousemove',moveTT);
       pCard.addEventListener('mouseleave',hideTT);
@@ -691,16 +821,15 @@ function buildBoard(sprintData){
       const dt=devMap[dev];
       const dTot=dt.length;
       const dBy={};
-      dt.forEach(t=>{const s=sc(t.status);dBy[s]=(dBy[s]||0)+1});
+      dt.forEach(t=>{const sr=resolveStatus(t.status);if(!dBy[sr.cls]) dBy[sr.cls]={...sr,count:0};dBy[sr.cls].count++});
       const dPct=wPct(dt);
       const dH=health(dPct);
 
+      // Chips dinâmicos
       let chips='';
-      if(dBy['status-running']) chips+=`<span class="chip chip-running">${dBy['status-running']} exec.</span>`;
-      if(dBy['status-waiting']) chips+=`<span class="chip chip-waiting">${dBy['status-waiting']} ag.</span>`;
-      if(dBy['status-done'])    chips+=`<span class="chip chip-done">${dBy['status-done']} ok</span>`;
-      if(dBy['status-rejected'])chips+=`<span class="chip chip-rejected">${dBy['status-rejected']} rej.</span>`;
-      if(dBy['status-other'])   chips+=`<span class="chip chip-other">${dBy['status-other']} outro${dBy['status-other']!==1?'s':''}</span>`;
+      Object.values(dBy).sort((a,b)=>b.w-a.w).forEach(({cls,lbl,cc,count})=>{
+        chips+=`<span class="chip ${cc}">${count} ${lbl.toLowerCase().slice(0,6)}.</span>`;
+      });
 
       const devCol=document.createElement('div');
       devCol.className='dev-col';
@@ -709,7 +838,7 @@ function buildBoard(sprintData){
       devHead.className='dev-head';
       devHead.innerHTML=`
         <div class="dev-top-row">
-          <div class="dev-avatar av-${devColor[dev]??0}">${ini(dev)}</div>
+          <div class="dev-avatar av-${devColorGlobal[dev]??0}">${ini(dev)}</div>
           <div style="min-width:0">
             <div class="dev-name">${dev}</div>
             <div class="dev-count">${dTot} card${dTot!==1?'s':''}</div>
@@ -732,10 +861,11 @@ function buildBoard(sprintData){
       cardsWrap.className='dev-cards';
       if(!dt.length){
         cardsWrap.innerHTML='<div class="empty-col">—</div>';
-      }else{
+      } else {
         dt.forEach(task=>{
+          const sr=resolveStatus(task.status);
           const card=document.createElement('div');
-          card.className=`task-card ${sc(task.status)}`;
+          card.className=`task-card ${sr.cls}`;
           card.innerHTML=`
             <div class="card-project">${task.projeto||'—'}</div>
             <div class="card-title">${task.titulo||'(sem título)'}</div>`;
@@ -760,21 +890,22 @@ function buildBoard(sprintData){
   }
 }
 
-/* ══════════════════════════════════════════
+/* ═══════════════════════════════════════════════
    LOAD
-══════════════════════════════════════════ */
+═══════════════════════════════════════════════ */
 async function loadData(){
   const board=document.getElementById('board');
   const btn=document.getElementById('reloadBtn');
   board.innerHTML='<div class="state-overlay"><div class="spinner"></div><span>Buscando dados da planilha…</span><span class="load-status" style="font-size:10.5px;color:var(--text-muted);margin-top:4px"></span></div>';
   document.getElementById('sprintFilters').innerHTML='';
   activeFilters=new Set(['ALL']);
+  unknownStatuses.clear();
   if(btn){btn.disabled=true;btn.textContent='⏳ Carregando…'}
 
   try{
     const {text}=await fetchCSV();
     const rows=parseCSV(text);
-    if(rows.length<2) throw new Error('Planilha retornou vazia. Verifique se está publicada corretamente.');
+    if(rows.length<2) throw new Error('Planilha retornou vazia. Verifique se está publicada.');
 
     const headers=rows[0].map(h=>h.trim());
     const idx=(...names)=>{
@@ -800,9 +931,8 @@ async function loadData(){
       }))
       .filter(t=>t.sprint.length>0);
 
-    if(!allTasks.length){
-      throw new Error('Nenhuma linha com coluna Sprint preenchida encontrada.\n\nCabeçalhos detectados: '+headers.slice(0,8).join(', '));
-    }
+    if(!allTasks.length)
+      throw new Error('Nenhuma linha com Sprint preenchido.\nCabeçalhos: '+headers.slice(0,8).join(', '));
 
     const sprintMap={};
     allTasks.forEach(t=>{if(!sprintMap[t.sprint])sprintMap[t.sprint]=[];sprintMap[t.sprint].push(t)});
@@ -811,11 +941,10 @@ async function loadData(){
 
     if(!sprintData.some(s=>s.tasks.length)){
       const found=Object.keys(sprintMap).slice(0,5).join(', ')||'nenhum';
-      throw new Error(`Nenhuma tarefa encontrada para Sprint 14/15/16.\nValores encontrados na coluna Sprint: ${found}`);
+      throw new Error(`Nenhuma tarefa para Sprint 14/15/16.\nEncontrado: ${found}`);
     }
 
     buildBoard(sprintData);
-
     const now=new Date();
     document.getElementById('lastUpdated').textContent=
       'Atualizado: '+now.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
@@ -827,14 +956,13 @@ async function loadData(){
         <div class="error-box">
           <h3>⚠️ Não foi possível carregar os dados</h3>
           <p>${err.message.replace(/\n/g,'<br>')}</p>
-          <div class="tt-sep" style="border-color:#e2e5eb;margin:12px 0"></div>
-          <p style="font-weight:600;font-size:12.5px;color:#1a1d23;margin-bottom:8px">Verifique se a planilha está publicada:</p>
+          <div style="border-top:1px solid var(--border);margin:12px 0"></div>
+          <p style="font-weight:600;font-size:12.5px;color:#1a1d23;margin-bottom:8px">Como publicar a planilha:</p>
           <div class="error-step"><div class="error-step-n">1</div><span>Abra a planilha no Google Sheets</span></div>
-          <div class="error-step"><div class="error-step-n">2</div><span>Clique em <strong>Arquivo → Compartilhar → Publicar na Web</strong></span></div>
-          <div class="error-step"><div class="error-step-n">3</div><span>Selecione <strong>Documento inteiro</strong> e formato <strong>Valores separados por vírgula (.csv)</strong></span></div>
-          <div class="error-step"><div class="error-step-n">4</div><span>Clique em <strong>Publicar</strong> e confirme</span></div>
-          <div class="error-step"><div class="error-step-n">5</div><span>Aguarde ~2 min e clique em Tentar novamente</span></div>
-          <p style="margin-top:10px;font-size:11.5px;color:#9099a8">URL esperada:<br><code>${CSV_URL}</code></p>
+          <div class="error-step"><div class="error-step-n">2</div><span><strong>Arquivo → Compartilhar → Publicar na Web</strong></span></div>
+          <div class="error-step"><div class="error-step-n">3</div><span>Selecione <strong>Documento inteiro</strong> + <strong>CSV (.csv)</strong></span></div>
+          <div class="error-step"><div class="error-step-n">4</div><span>Clique <strong>Publicar</strong> e aguarde ~2 min</span></div>
+          <p style="margin-top:10px;font-size:11px;color:#9099a8">URL: <code>${CSV_URL}</code></p>
           <button class="retry-btn" onclick="loadData()">↺ Tentar novamente</button>
         </div>
       </div>`;
