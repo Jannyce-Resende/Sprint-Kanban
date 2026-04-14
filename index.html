@@ -98,11 +98,11 @@ header h1 span{color:var(--text-muted);font-weight:400}
 .sprint-scroll::-webkit-scrollbar-track{background:var(--surface2)}
 .sprint-scroll::-webkit-scrollbar-thumb{background:var(--border-strong);border-radius:4px}
 .sprint-scroll::-webkit-scrollbar-thumb:hover{background:#aab2be}
-.sprint-cols{display:flex;min-width:max-content}
+.sprint-cols{display:flex;min-width:100%}
 
 /* ── Dev / Proj column ── */
-.dev-col{width:var(--col-dev);min-width:var(--col-dev);flex-shrink:0;border-right:1px solid var(--border);display:flex;flex-direction:column}
-.proj-col{width:168px;min-width:168px}
+.dev-col{flex:1 1 var(--col-dev);min-width:var(--col-dev);border-right:1px solid var(--border);display:flex;flex-direction:column}
+.proj-col{flex:1 1 168px;min-width:168px}
 
 .dev-head{padding:6px 8px 5px;border-bottom:1px solid var(--border);background:var(--surface2);display:flex;flex-direction:column;gap:4px}
 .dev-top-row{display:flex;align-items:center;gap:6px}
@@ -125,7 +125,7 @@ header h1 span{color:var(--text-muted);font-weight:400}
 .task-card:hover{box-shadow:var(--sh-hover);transform:translateY(-1px);z-index:2}
 .task-card.dimmed{opacity:.25;pointer-events:none}
 .card-project{font-size:8.5px;font-weight:600;font-family:'DM Mono',monospace;color:var(--text-muted);text-transform:uppercase;letter-spacing:.3px;line-height:1}
-.card-title{font-size:10.5px;font-weight:500;color:var(--text-primary);line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:calc(var(--col-dev) - 20px)}
+.card-title{font-size:10.5px;font-weight:500;color:var(--text-primary);line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
 
 /* proj card */
 .proj-card{background:var(--surface2)!important;border-color:var(--border)!important}
@@ -298,11 +298,19 @@ const PROXIES = [
   url => `https://thingproxy.freeboard.io/fetch/${url}`,
 ];
 
-const SPRINT_CONFIG = [
-  { name:'Sprint 14', start:'30/03', end:'03/04' },
-  { name:'Sprint 15', start:'06/04', end:'10/04' },
-  { name:'Sprint 16', start:'13/04', end:'17/04' },
-];
+// Sprint 14 = semana 30/03/2026 (seg). Cada sprint subsequente +7 dias.
+const SPRINT_BASE_NUM = 14;
+const SPRINT_BASE_DATE = new Date(2026, 2, 30);
+
+function sprintDates(name){
+  const m=(name||'').match(/(\d+)/);
+  if(!m) return{name,start:'',end:''};
+  const n=+m[1];
+  const ms=SPRINT_BASE_DATE.getTime()+(n-SPRINT_BASE_NUM)*7*86400000;
+  const s=new Date(ms),e=new Date(ms+4*86400000);
+  const f=d=>`${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')}`;
+  return{name,start:f(s),end:f(e)};
+}
 
 const SPRINT_CAPACITY = 35; // mantido apenas como referência, não mais usado no cálculo
 
@@ -476,12 +484,14 @@ function devHours(tasks){
 }
 
 function hoursPct(tasks){
-  const total=tasks.reduce((s,t)=>s+(parseFloat(t.horas)||0),0);
-  if(!total) return wPct(tasks); // fallback: progresso ponderado se não há horas
-  const done=tasks.filter(t=>{
+  const withHrs=tasks.filter(t=>parseFloat(t.horas)>0);
+  const total=withHrs.reduce((s,t)=>s+parseFloat(t.horas),0);
+  // fallback p/ wPct se não há horas ou cobertura < 50% das tarefas
+  if(!total||withHrs.length<tasks.length*0.5) return wPct(tasks);
+  const done=withHrs.filter(t=>{
     const c=resolveStatus(t.status).cls;
     return c==='status-done'||c==='status-validation';
-  }).reduce((s,t)=>s+(parseFloat(t.horas)||0),0);
+  }).reduce((s,t)=>s+parseFloat(t.horas),0);
   return Math.min(100,Math.round(done/total*100));
 }
 
@@ -574,7 +584,7 @@ function progTThtml(tasks,pct,h,scope){
     `<div class="tt-row"><span class="tt-lbl">${raw}</span><span class="tt-val">${count} demanda${count!==1?'s':''}${hrs?` · ${fmt(hrs)}h`:''}</span></div>`
   ).join('');
   return`
-    <div class="tt-hd">Progresso por horas — ${scope}</div>
+    <div class="tt-hd">Progresso por status — ${scope}</div>
     ${rows}
     <div class="tt-sep"></div>
     ${tHrs?`<div class="tt-row"><span class="tt-lbl">Total estimado</span><span class="tt-val">${fmt(tHrs)}h</span></div>
@@ -755,7 +765,7 @@ function buildBoard(sprintData){
     });
 
     const total=tasks.length;
-    const sPct=hoursPct(tasks);
+    const sPct=wPct(tasks);
     const sH=health(sPct);
 
     // Projetos
@@ -905,7 +915,7 @@ function buildBoard(sprintData){
       const dBy={};
       dtAll.forEach(t=>{const sr=resolveStatus(t.status);if(!dBy[sr.cls]) dBy[sr.cls]={...sr,count:0};dBy[sr.cls].count++});
       const dHrs=devHours(dtAll);
-      const dPct=dHrs.total>0?Math.min(100,Math.round(dHrs.done/dHrs.total*100)):hoursPct(dtAll);
+      const dPct=wPct(dtAll);
       const dH=health(dPct);
       const hoursOver=dHrs.saldo<0;
       const hoursBarPct=Math.min(100,dHrs.total>0?Math.round(dHrs.done/dHrs.total*100):0);
@@ -983,6 +993,7 @@ function buildBoard(sprintData){
 
     scrollWrap.appendChild(colsWrap);
     block.appendChild(scrollWrap);
+    if(!activeFilters.has('ALL')&&!activeFilters.has(sprint.name)) block.classList.add('hidden');
     board.appendChild(block);
   });
 
@@ -1021,7 +1032,7 @@ async function loadData(){
           iT=idx('título','titulo','title'),iS=idx('status'),
           iQ=idx('quem','responsável','responsavel'),iSp=idx('sprint'),
           iE=idx('entrega','data'),iO=idx('obs','observ'),
-          iH=idx('horas','hora');
+          iH=idx('estimativa','horas','hora');
 
     const get=(cells,i)=>i>=0?clean(cells[i]):'';
 
@@ -1042,15 +1053,17 @@ async function loadData(){
 
     // Sprints dinâmicas — lidas da planilha, ordenadas por nome
     const sprintNamesFromData=[...new Set(allTasks.map(t=>t.sprint).filter(Boolean))].sort();
-    const sprintData=sprintNamesFromData.map(name=>{
-      const cfg=SPRINT_CONFIG.find(c=>c.name===name)||{name,start:'',end:''};
-      return{sprint:cfg,tasks:sprintMap[name]||[]};
-    });
+    const sprintData=sprintNamesFromData.map(name=>({sprint:sprintDates(name),tasks:sprintMap[name]||[]}));
 
     if(!sprintData.length){
       const found=Object.keys(sprintMap).slice(0,5).join(', ')||'nenhum';
       throw new Error('Nenhuma tarefa com Sprint preenchida.\nEncontrado: '+found);
     }
+
+    // Define filtro padrão: sprint atual, ou Todas se não houver
+    const curSprint=sprintData.find(s=>isCurrent(s.sprint));
+    if(curSprint) activeFilters=new Set([curSprint.sprint.name]);
+    else activeFilters=new Set(['ALL']);
 
     buildBoard(sprintData);
     const now=new Date();
