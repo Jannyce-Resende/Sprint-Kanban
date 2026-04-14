@@ -109,8 +109,9 @@ header h1 span{color:var(--text-muted);font-weight:400}
 .dev-avatar{width:22px;height:22px;border-radius:50%;color:#fff;font-size:9.5px;font-weight:600;display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .dev-name{font-size:11px;font-weight:600;color:var(--text-primary);line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:108px}
 .dev-count{font-size:9.5px;color:var(--text-muted);font-family:'DM Mono',monospace;white-space:nowrap;font-weight:700}
-.dev-chips{display:flex;gap:2px;flex-wrap:wrap}
-.chip{font-size:9px;padding:2px 6px;border-radius:8px;font-weight:700;border:1px solid transparent;white-space:nowrap}
+.dev-chips{display:flex;gap:4px;align-items:center;flex-wrap:wrap}
+.chip{display:inline-flex;align-items:center;gap:2px;font-size:8.5px;font-weight:700;font-family:'DM Mono',monospace;white-space:nowrap;color:var(--text-secondary)}
+.chip-dot{width:7px;height:7px;border-radius:2px;flex-shrink:0}
 .dev-prog-row{display:flex;align-items:center;gap:5px}
 .dev-prog-track{flex:1;height:3px;background:var(--border);border-radius:3px;overflow:hidden}
 .dev-prog-fill{height:100%;border-radius:3px;transition:width .4s}
@@ -135,6 +136,21 @@ header h1 span{color:var(--text-muted);font-weight:400}
 .proj-card-hint{font-size:9.5px;color:var(--accent);font-weight:600}
 
 .empty-col{color:var(--text-muted);font-size:10px;text-align:center;padding:14px 6px;opacity:.4}
+
+/* ── Card layout extras ── */
+.card-header-row{display:flex;align-items:baseline;justify-content:space-between;gap:3px;line-height:1}
+.card-hours{font-size:9px;font-weight:700;font-family:'DM Mono',monospace;background:rgba(0,0,0,.06);border-radius:3px;padding:1px 4px;white-space:nowrap;flex-shrink:0;color:var(--text-secondary)}
+.card-footer{display:flex;align-items:center;justify-content:space-between;margin-top:3px;gap:4px;min-height:14px}
+.card-date{font-size:9px;color:var(--text-muted);font-family:'DM Mono',monospace;white-space:nowrap}
+.card-delay{font-size:10px;line-height:1}
+
+/* ── Dev hours ── */
+.dev-hours-row{display:flex;align-items:center;gap:5px;margin-top:1px}
+.dev-hours-track{flex:1;height:3px;background:var(--border);border-radius:3px;overflow:hidden}
+.dev-hours-fill{height:100%;border-radius:3px;transition:width .4s;background:#6366f1}
+.dev-hours-fill.over{background:#dc2626}
+.dev-saldo{font-size:9px;font-family:'DM Mono',monospace;font-weight:700;white-space:nowrap;color:var(--text-secondary)}
+.dev-saldo.over{color:#dc2626}
 
 /* ══ MODAL — centralizado, fundo cinza kanban ══ */
 .modal-overlay{
@@ -288,6 +304,8 @@ const SPRINT_CONFIG = [
   { name:'Sprint 16', start:'13/04', end:'17/04' },
 ];
 
+const SPRINT_CAPACITY = 35; // mantido apenas como referência, não mais usado no cálculo
+
 /* ─────────────────────────────────────────────
    STATUS ENGINE — dinâmico + extensível
 
@@ -344,12 +362,15 @@ function adjustColor(hex){
   return hex; // simplificado; chips têm override manual acima
 }
 
+// Normaliza string removendo acentos para comparação robusta
+function nrm(s){ return (s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim(); }
+
 // Descobre o status de uma tarefa
 function getStatus(rawStatus){
-  const s=(rawStatus||'').toLowerCase().trim();
+  const s=nrm(rawStatus);
   if(!s) return STATUS_OTHER;
   for(const r of STATUS_RULES){
-    if(r.keys.some(k=>s.includes(k))) return r;
+    if(r.keys.some(k=>s.includes(nrm(k)))) return r;
   }
   return STATUS_OTHER;
 }
@@ -420,10 +441,65 @@ function ini(name){
 }
 
 function isCurrent(s){
+  if(!s.start||!s.end) return false;
   const today=new Date(),yr=today.getFullYear();
   const parse=v=>{const[d,m]=v.split('/');return new Date(yr,+m-1,+d)};
   const end=parse(s.end);end.setHours(23,59,59);
   return today>=parse(s.start)&&today<=end;
+}
+
+function fmtDate(v){
+  if(!v) return '';
+  const p=v.split('/');
+  if(p.length<2) return v;
+  return `${p[0].padStart(2,'0')}/${p[1].padStart(2,'0')}`;
+}
+
+function isOverdue(task){
+  if(!task.entrega) return false;
+  const sr=resolveStatus(task.status);
+  if(sr.cls==='status-done'||sr.cls==='status-validation') return false;
+  const p=task.entrega.split('/');
+  if(p.length<2) return false;
+  const yr=p.length>=3?+p[2]:new Date().getFullYear();
+  const dt=new Date(yr,+p[1]-1,+p[0]);
+  return dt<new Date(new Date().setHours(0,0,0,0));
+}
+
+function devHours(tasks){
+  const total=tasks.reduce((s,t)=>s+(parseFloat(t.horas)||0),0);
+  const done=tasks.filter(t=>{
+    const c=resolveStatus(t.status).cls;
+    return c==='status-done'||c==='status-validation';
+  }).reduce((s,t)=>s+(parseFloat(t.horas)||0),0);
+  return{total,done,saldo:total-done};
+}
+
+function hoursPct(tasks){
+  const total=tasks.reduce((s,t)=>s+(parseFloat(t.horas)||0),0);
+  if(!total) return wPct(tasks); // fallback: progresso ponderado se não há horas
+  const done=tasks.filter(t=>{
+    const c=resolveStatus(t.status).cls;
+    return c==='status-done'||c==='status-validation';
+  }).reduce((s,t)=>s+(parseFloat(t.horas)||0),0);
+  return Math.min(100,Math.round(done/total*100));
+}
+
+function fmt(n){return n%1===0?n:n.toFixed(1);}
+
+function hoursTThtml(tasks,h){
+  const rows=tasks.filter(t=>t.horas).map(t=>{
+    const done2=['status-done','status-validation'].includes(resolveStatus(t.status).cls);
+    return`<div class="tt-row"><span class="tt-lbl">${(t.titulo||'—').slice(0,20)}</span><span class="tt-val">${parseFloat(t.horas)||t.horas}h${done2?' ✓':''}</span></div>`;
+  }).join('');
+  const saldoColor=h.saldo<=0?'#16a34a':h.saldo<5?'#d97706':'#e5e7eb';
+  return`
+    <div class="tt-hd">Horas estimadas × concluídas</div>
+    ${rows||'<div class="tt-row"><span class="tt-lbl" style="color:#9ca3af">Sem horas registradas</span></div>'}
+    <div class="tt-sep"></div>
+    <div class="tt-row"><span class="tt-lbl">Total estimado</span><span class="tt-val">${fmt(h.total)}h</span></div>
+    <div class="tt-row"><span class="tt-lbl">Concluído</span><span class="tt-val">${fmt(h.done)}h</span></div>
+    <div class="tt-row"><span class="tt-lbl">Saldo</span><span class="tt-val" style="color:${saldoColor};font-weight:700">${fmt(h.saldo)}h</span></div>`;
 }
 
 /* ═══════════════════════════════════════════════
@@ -477,37 +553,33 @@ function cardTThtml(t){
     <div class="tt-row"><span class="tt-lbl">Status</span><span class="tt-val">${t.status||'—'} <span style="color:#9ca3af;font-size:9.5px">(peso ${(sr.w*100).toFixed(0)}%)</span></span></div>
     <div class="tt-row"><span class="tt-lbl">Responsável</span><span class="tt-val">${t.quem||'—'}</span></div>
     <div class="tt-row"><span class="tt-lbl">Sprint</span><span class="tt-val">${t.sprint||'—'}</span></div>
-    ${t.entrega?`<div class="tt-row"><span class="tt-lbl">Entrega</span><span class="tt-val">${t.entrega}</span></div>`:''}
-    ${t.obs?`<div class="tt-row"><span class="tt-lbl">OBS</span><span class="tt-val">${t.obs}</span></div>`:''}`;
+    ${t.entrega?`<div class="tt-row"><span class="tt-lbl">Entrega</span><span class="tt-val">${t.entrega}${isOverdue(t)?' ⚠️':''}</span></div>`:''}
+    ${t.horas?`<div class="tt-row"><span class="tt-lbl">Horas</span><span class="tt-val">${t.horas}h</span></div>`:''}
+    ${t.obs?`<div class="tt-row"><span class="tt-lbl">OBS</span><span class="tt-val">${t.obs}</span></div>`:''}`;  
 }
 
 function progTThtml(tasks,pct,h,scope){
-  // Agrupa por status raw para mostrar todos os status presentes
-  const rawGroups={};
+  const tHrs=tasks.reduce((s,t)=>s+(parseFloat(t.horas)||0),0);
+  const dHrs=tasks.filter(t=>{const c=resolveStatus(t.status).cls;return c==='status-done'||c==='status-validation';}).reduce((s,t)=>s+(parseFloat(t.horas)||0),0);
+  const byStatus={};
   tasks.forEach(t=>{
-    const k=t.status||'(sem status)';
-    if(!rawGroups[k]) rawGroups[k]={count:0,w:resolveStatus(t.status).w,lbl:resolveStatus(t.status).lbl};
-    rawGroups[k].count++;
+    const raw=t.status||'(sem status)';
+    if(!byStatus[raw]) byStatus[raw]={count:0,hrs:0,lbl:resolveStatus(t.status).lbl};
+    byStatus[raw].count++;
+    byStatus[raw].hrs+=(parseFloat(t.horas)||0);
   });
-  const rows=Object.entries(rawGroups).sort((a,b)=>b[1].w-a[1].w).map(([raw,{count,w,lbl}])=>
-    `<div class="tt-row"><span class="tt-lbl">${raw}</span><span class="tt-val">${count} × ${(w*100).toFixed(0)}% = ${(count*w).toFixed(2)}</span></div>`
+  const rows=Object.entries(byStatus).sort((a,b)=>{
+    const wa=resolveStatus(a[0]).w,wb=resolveStatus(b[0]).w;return wb-wa;
+  }).map(([raw,{count,hrs}])=>
+    `<div class="tt-row"><span class="tt-lbl">${raw}</span><span class="tt-val">${count} demanda${count!==1?'s':''}${hrs?` · ${fmt(hrs)}h`:''}</span></div>`
   ).join('');
-
-  const allRules=[...STATUS_RULES,{lbl:'Outros/novos',w:0.20}];
-  const weightRows=allRules.map(r=>
-    `<div class="tt-row"><span class="tt-lbl">${r.lbl}</span><span class="tt-val">${(r.w*100).toFixed(0)}%</span></div>`
-  ).join('');
-
   return`
-    <div class="tt-hd">Progresso ponderado — ${scope}</div>
-    <div class="tt-row"><span class="tt-lbl">Total</span><span class="tt-val">${tasks.length} tarefas</span></div>
+    <div class="tt-hd">Progresso por horas — ${scope}</div>
     ${rows}
     <div class="tt-sep"></div>
-    <div class="tt-row"><span class="tt-lbl">Fórmula</span><span class="tt-val">Σ(peso×qtd) ÷ total × 100</span></div>
-    <div class="tt-row"><span class="tt-lbl">Resultado</span><span class="tt-val" style="color:${h.c};font-weight:700">${pct}% — ${h.l}</span></div>
-    <div class="tt-sep"></div>
-    <div class="tt-hd">Tabela de pesos</div>
-    ${weightRows}
+    ${tHrs?`<div class="tt-row"><span class="tt-lbl">Total estimado</span><span class="tt-val">${fmt(tHrs)}h</span></div>
+    <div class="tt-row"><span class="tt-lbl">Concluído</span><span class="tt-val">${fmt(dHrs)}h</span></div>`:''}
+    <div class="tt-row"><span class="tt-lbl">Progresso</span><span class="tt-val" style="color:${h.c};font-weight:700">${pct}% — ${h.l}</span></div>
     <div class="tt-sep"></div>
     <div class="tt-hd">Semáforo</div>
     <div class="tt-row"><span class="tt-lbl" style="color:#16a34a">≥ 80%</span><span class="tt-val">Excelente</span></div>
@@ -591,9 +663,13 @@ function openModal(title, subtitle, tasks){
           const card=document.createElement('div');
           card.className=`task-card ${sr.cls}`;
           card.style.maxWidth='188px';
+          const mOver=isOverdue(task);
+          const mHrs=task.horas?`<span class="card-hours">${parseFloat(task.horas)||task.horas}h</span>`:'';
+          const mDateRow=(task.entrega||mOver)?`<div class="card-footer">${task.entrega?`<span class="card-date">📅 ${fmtDate(task.entrega)}</span>`:'<span></span>'}${mOver?`<span class="card-delay">⚠️</span>`:''}</div>`:'';
           card.innerHTML=`
-            <div class="card-project">${task.projeto||'—'}</div>
-            <div class="card-title" style="max-width:172px">${task.titulo||'(sem título)'}</div>`;
+            <div class="card-header-row"><div class="card-project">${task.projeto||'—'}</div>${mHrs}</div>
+            <div class="card-title" style="max-width:172px">${task.titulo||'(sem título)'}</div>
+            ${mDateRow}`;
           if(task.link) card.addEventListener('click',()=>window.open(task.link,'_blank'));
           card.addEventListener('mouseenter',e=>showTT(e,cardTThtml(task)));
           card.addEventListener('mousemove',moveTT);
@@ -679,7 +755,7 @@ function buildBoard(sprintData){
     });
 
     const total=tasks.length;
-    const sPct=wPct(tasks);
+    const sPct=hoursPct(tasks);
     const sH=health(sPct);
 
     // Projetos
@@ -828,13 +904,18 @@ function buildBoard(sprintData){
 
       const dBy={};
       dtAll.forEach(t=>{const sr=resolveStatus(t.status);if(!dBy[sr.cls]) dBy[sr.cls]={...sr,count:0};dBy[sr.cls].count++});
-      const dPct=wPct(dtAll);
+      const dHrs=devHours(dtAll);
+      const dPct=dHrs.total>0?Math.min(100,Math.round(dHrs.done/dHrs.total*100)):hoursPct(dtAll);
       const dH=health(dPct);
+      const hoursOver=dHrs.saldo<0;
+      const hoursBarPct=Math.min(100,dHrs.total>0?Math.round(dHrs.done/dHrs.total*100):0);
 
-      // Chips com label completo e contagem em negrito
+      // Chips compactos: ponto colorido + número
       let chips='';
-      Object.values(dBy).sort((a,b)=>b.w-a.w).forEach(({lbl,cc,count})=>{
-        chips+=`<span class="chip ${cc}"><strong>${count}</strong> ${lbl}</span>`;
+      const chipTTlines=[];
+      Object.values(dBy).sort((a,b)=>b.w-a.w).forEach(({lbl,bd,count})=>{
+        chips+=`<span class="chip" title="${count} ${lbl}"><span class="chip-dot" style="background:${bd}"></span>${count}</span>`;
+        chipTTlines.push(`${count} ${lbl}`);
       });
 
       const devCol=document.createElement('div');
@@ -851,13 +932,21 @@ function buildBoard(sprintData){
           </div>
         </div>
         <div class="dev-chips">${chips}</div>
+        <div class="dev-hours-row">
+          <span class="dev-saldo${hoursOver?' over':''}">Saldo: ${fmt(dHrs.saldo)}h (de ${fmt(dHrs.total)}h)</span>
+          <span class="info-icon hours-info">ⓘ</span>
+        </div>
         <div class="dev-prog-row">
-          <div class="dev-prog-track"><div class="dev-prog-fill" style="width:${dPct}%;background:${dH.c}"></div></div>
+          <div class="dev-prog-track"><div class="dev-hours-fill${hoursOver?' over':''}" style="width:${hoursBarPct}%;height:100%;border-radius:3px;transition:width .4s"></div></div>
           <span class="dev-prog-pct" style="color:${dH.c}">${dPct}%</span>
-          <span class="info-icon">ⓘ</span>
+          <span class="info-icon prog-info">ⓘ</span>
         </div>`;
 
-      const dIcon=devHead.querySelector('.info-icon');
+      const dIconHours=devHead.querySelector('.hours-info');
+      dIconHours.addEventListener('mouseenter',e=>showTT(e,hoursTThtml(dtAll,dHrs)));
+      dIconHours.addEventListener('mousemove',moveTT);
+      dIconHours.addEventListener('mouseleave',hideTT);
+      const dIcon=devHead.querySelector('.prog-info');
       dIcon.addEventListener('mouseenter',e=>showTT(e,progTThtml(dtAll,dPct,dH,dev)));
       dIcon.addEventListener('mousemove',moveTT);
       dIcon.addEventListener('mouseleave',hideTT);
@@ -872,11 +961,15 @@ function buildBoard(sprintData){
       } else {
         dt.forEach(task=>{
           const sr=resolveStatus(task.status);
+          const over=isOverdue(task);
           const card=document.createElement('div');
           card.className=`task-card ${sr.cls}`;
+          const hrs=task.horas?`<span class="card-hours">${parseFloat(task.horas)||task.horas}h</span>`:'';
+          const dateRow=(task.entrega||over)?`<div class="card-footer">${task.entrega?`<span class="card-date">📅 ${fmtDate(task.entrega)}</span>`:'<span></span>'}${over?`<span class="card-delay">⚠️</span>`:''}</div>`:'';
           card.innerHTML=`
-            <div class="card-project">${task.projeto||'—'}</div>
-            <div class="card-title">${task.titulo||'(sem título)'}</div>`;
+            <div class="card-header-row"><div class="card-project">${task.projeto||'—'}</div>${hrs}</div>
+            <div class="card-title">${task.titulo||'(sem título)'}</div>
+            ${dateRow}`;
           if(task.link) card.addEventListener('click',()=>window.open(task.link,'_blank'));
           card.addEventListener('mouseenter',e=>showTT(e,cardTThtml(task)));
           card.addEventListener('mousemove',moveTT);
@@ -927,7 +1020,8 @@ async function loadData(){
     const iC=idx('cliente'),iP=idx('projeto'),iL=idx('task','link'),
           iT=idx('título','titulo','title'),iS=idx('status'),
           iQ=idx('quem','responsável','responsavel'),iSp=idx('sprint'),
-          iE=idx('entrega','data'),iO=idx('obs','observ');
+          iE=idx('entrega','data'),iO=idx('obs','observ'),
+          iH=idx('horas','hora');
 
     const get=(cells,i)=>i>=0?clean(cells[i]):'';
 
@@ -936,6 +1030,7 @@ async function loadData(){
         cliente:get(cells,iC),projeto:get(cells,iP),link:get(cells,iL),
         titulo:get(cells,iT),status:get(cells,iS),quem:get(cells,iQ),
         sprint:get(cells,iSp),entrega:get(cells,iE),obs:get(cells,iO),
+        horas:get(cells,iH),
       }))
       .filter(t=>t.sprint.length>0);
 
@@ -945,11 +1040,16 @@ async function loadData(){
     const sprintMap={};
     allTasks.forEach(t=>{if(!sprintMap[t.sprint])sprintMap[t.sprint]=[];sprintMap[t.sprint].push(t)});
 
-    const sprintData=SPRINT_CONFIG.map(cfg=>({sprint:cfg,tasks:sprintMap[cfg.name]||[]}));
+    // Sprints dinâmicas — lidas da planilha, ordenadas por nome
+    const sprintNamesFromData=[...new Set(allTasks.map(t=>t.sprint).filter(Boolean))].sort();
+    const sprintData=sprintNamesFromData.map(name=>{
+      const cfg=SPRINT_CONFIG.find(c=>c.name===name)||{name,start:'',end:''};
+      return{sprint:cfg,tasks:sprintMap[name]||[]};
+    });
 
-    if(!sprintData.some(s=>s.tasks.length)){
+    if(!sprintData.length){
       const found=Object.keys(sprintMap).slice(0,5).join(', ')||'nenhum';
-      throw new Error(`Nenhuma tarefa para Sprint 14/15/16.\nEncontrado: ${found}`);
+      throw new Error('Nenhuma tarefa com Sprint preenchida.\nEncontrado: '+found);
     }
 
     buildBoard(sprintData);
